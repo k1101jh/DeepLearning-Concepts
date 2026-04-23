@@ -1,0 +1,3 @@
+SGD
+Adam
+Adamw

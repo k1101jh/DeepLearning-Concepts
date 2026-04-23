@@ -1,0 +1,10 @@
+ - max_new_tokens: 출력할 최대 토큰 수
+ - temperature: 출력의 무작위성을 제어. 높을수록 창의적인 답변 생성
+ - top_p: 0 ~ 1 사이 값으로 설정. 확률분포 내에서 선택할 단어의 범위를 결정. 0일 경우 확률이 가장 높은 단어 하나만 선택하게 된다. 따라서 항상 같은 답변을 생성 
+ - top_k: top_p는 확률 값으로 범위를 자르는데 비해 top_k는 개수로 범위를 자른다. top_p를 조정하는 걸 추천
+ - typical_p: 
+ - min_p
+ - repetition_penalty
+ - frequency_penalty
+ - presence_penalty
+ - stopping_strings(stop_sequences): 문장을 생성하다가 stopping strings에 있는 문자열을 생성하면 생성을 중단.
