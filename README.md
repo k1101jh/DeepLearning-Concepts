@@ -6,10 +6,11 @@
 
 ## 📚 카테고리별 개념 목록
 
-### 🏋️ Training (학습 기법 및 스케줄링)
+### 🏋️ Training & Fine-Tuning (학습 기법 및 스케줄링)
 - [EMA (Exponential Moving Average)](./Training/EMA/EMA.md)
 - [Learning Rate Warmup](./Training/Warmup/Warmup.md)
 - [AMP (Automatic Mixed Precision)](./Training/AMP/AMP.md)
+- [LoRA (Low-Rank Adaptation - 경량 미세조정)](./Training/LoRA/LoRA.md)
 
 ### ⚙️ Optimizer (최적화 알고리즘)
 - [AdamW](./Optimizer/AdamW/AdamW.md)
@@ -41,6 +42,7 @@
 - [Semantic Router](./LLM/Semantic%20Router/Semantic%20Router.md)
 
 ### 👁️ Computer Vision (컴퓨터 비전)
+- [Vision Transformer (ViT)](./Vision/Vision%20Transformer/Vision%20Transformer.md)
 - [Human Pose Estimation](./Vision/Human%20Pose%20Estimation/Human%20Pose%20Estimation.md)
 - [Mutual Nearest Neighbor](./Vision/Mutual%20Nearest%20Neighbor/Mutual%20Nearest%20Neighbor.md)
 - [Object Detection](./Vision/Object%20Detection/Object%20Detection.md)
