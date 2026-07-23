@@ -16,7 +16,8 @@
 - [AdamW](./Optimizer/AdamW/AdamW.md)
 - [Optimizer 기초 및 발전 과정](./Basics/Optimizer/Optimizer.md)
 
-### 🧱 Basics (딥러닝 기초 개념 및 기법)
+### 🧱 Basics & Spatial AI (딥러닝 기초 및 공간 지능)
+- [World Model (세계 모델 / 공간 시뮬레이터)](./Basics/World%20Model/World%20Model.md)
 - [Activation Function (활성화 함수 - ReLU, GELU, SiLU 등)](./Basics/Activation%20Function/Activation%20Function.md)
 - [Data Augmentation (데이터 증강)](./Basics/Augmentation/Augmentation.md)
 - [Knowledge Distillation (지식 증류)](./Basics/Distillation/Distillation.md)
@@ -37,13 +38,15 @@
 - [GAN (Generative Adversarial Network)](./GAN/GAN/GAN.md)
 - [VAE (Variational Autoencoder)](./VAE/VAE/VAE.md)
 
-### 💬 LLM & Multi-Modal (대형 언어 모델 및 다중모달)
+### 💬 LLM & Multi-Modal / Robotics (대형 언어 모델 및 로보틱스)
 - [VLM (Vision-Language Model - 시각-언어 모델)](./LLM/VLM/VLM.md)
+- [VLA (Vision-Language-Action Model - 시각-언어-행동 모델)](./LLM/VLA/VLA.md)
 - [InstructGPT](./LLM/InstructGPT/InstructGPT.md)
 - [LLM 파라미터 및 경량화 설정](./LLM/LLM%20파라미터/LLM%20파라미터.md)
 - [Semantic Router](./LLM/Semantic%20Router/Semantic%20Router.md)
 
-### 👁️ Computer Vision (컴퓨터 비전)
+### 👁️ Computer Vision & SLAM (컴퓨터 비전 및 위치 추적)
+- [Visual SLAM (비주얼 동시적 위치추정 및 지도작성)](./Vision/Visual%20SLAM/Visual%20SLAM.md)
 - [Vision Transformer (ViT)](./Vision/Vision%20Transformer/Vision%20Transformer.md)
 - [Human Pose Estimation](./Vision/Human%20Pose%20Estimation/Human%20Pose%20Estimation.md)
 - [Mutual Nearest Neighbor](./Vision/Mutual%20Nearest%20Neighbor/Mutual%20Nearest%20Neighbor.md)
