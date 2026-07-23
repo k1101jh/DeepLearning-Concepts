@@ -11,18 +11,18 @@ Reference:
 ## 1. 개념 정보 및 한 줄 요약
 - **개념명**: LoRA (Low-Rank Adaptation / 저차원 적응 기법)
 - **관련 분야/카테고리**: Training / Fine-Tuning / PEFT (Parameter-Efficient Fine-Tuning)
-- **한 줄 요약**: 사전 학습된 대형 모델(LLM/Diffusion)의 가중치를 동결(Freeze)하고, 가중치 변화량을 저차원 분해 행렬($W_0 + B \cdot A$, $r \ll d$)로 우회 학습하여 메모리와 파라미터 수모를 99% 이상 절감하는 효율적 미세조정 기법이다.
+- **한 줄 요약**: 사전 학습된 대형 모델(LLM/Diffusion)의 가중치를 동결(Freeze)하고, 가중치 변화량을 저차원 분해 행렬($W_0 + B \cdot A$, $r \ll d$)로 우회 학습하여 메모리와 파라미터 수모를 99% 이상 절감하는 효율적 미세조정 기법
 
 ---
 
 ## 2. 등장 배경 및 해결하려는 문제 (Why?)
 
 ### Full Fine-Tuning의 획기적 비용 문제
-- **막대한 GPU 메모리 점유**: 수십억~수천억 개 파라미터를 가진 LLM(예: LLaMA-70B, GPT-3)을 전체 미세조정(Full Fine-Tuning)하려면 가중치뿐만 아니라 Optimizer State(Adam 8 bytes/param), Gradient(4 bytes/param), Activation 메모리가 필요하여 수백 GB~TB 단위의 VRAM이 요구됨.
-- **배포 및 저장 공간 한계**: 서빙 시 타깃 데이터셋마다 70GB 이상의 전체 파라미터 체크포인트를 독립적으로 배포해야 하므로 스토리지가 낭비됨.
+- **막대한 GPU 메모리 점유**: 수십억~수천억 개 파라미터를 가진 LLM(예: LLaMA-70B, GPT-3)을 전체 미세조정(Full Fine-Tuning)하려면 가중치뿐만 아니라 Optimizer State(Adam 8 bytes/param), Gradient(4 bytes/param), Activation 메모리가 필요하여 수백 GB~TB 단위의 VRAM이 요구됨
+- **배포 및 저장 공간 한계**: 서빙 시 타깃 데이터셋마다 70GB 이상의 전체 파라미터 체크포인트를 독립적으로 배포해야 하므로 스토리지가 낭비됨
 
 ### LoRA 도입을 통한 핵심 해결 목표
-- **학습 파라미터 수 99% 감소**: 가중치 업데이트 행렬 $\Delta W$의 본질적인 랭크(Intrinsic Rank)가 낮다는 점에 착안하여 $0.1\% \sim 1\%$의 파라미터만 학습함.
+- **학습 파라미터 수 99% 감소**: 가중치 업데이트 행렬 $\Delta W$의 본질적인 랭크(Intrinsic Rank)가 낮다는 점에 착안하여 $0.1\% \sim 1\%$의 파라미터만 학습함
 - **추론 지연(Latency) 0**: 학습 완료 후 저차원 행렬 $B \cdot A$를 기존 가중치 $W_0$에 사전에 더해주면($W = W_0 + B \cdot A$), 추론 시 구조적 오버헤드가 전혀 발생하지 않습니다.
 
 ---
@@ -42,7 +42,7 @@ $$h = W x = W_0 x + \Delta W x = W_0 x + \frac{\gamma}{r} B A x$$
 - $\frac{\gamma}{r}$: 스케일링 계수 ($\gamma$는 고정 튜닝 하이퍼파라미터 인자)
 
 ### 2) 왜 $A$와 $B$의 초기화가 다른가?
-- 학습 시작 시점($t=0$)에 $\Delta W = B \cdot A = 0$이 되어야 모델의 초기 출력이 원본 사전 학습 모델과 100% 동일하게 유지됨.
+- 학습 시작 시점($t=0$)에 $\Delta W = B \cdot A = 0$이 되어야 모델의 초기 출력이 원본 사전 학습 모델과 100% 동일하게 유지됨
 - 따라서 $B = 0$으로 초기화하고 $A$는 가우시안 분포로 초기화하여 초기 출력을 0으로 맞춥니다.
 
 ---
@@ -50,17 +50,17 @@ $$h = W x = W_0 x + \Delta W x = W_0 x + \frac{\gamma}{r} B A x$$
 ## 4. 핵심 세부 개념 및 부가 설명
 
 ### 1) Intrinsic Dimension (내재적 차원)
-- 대형 모델은 이미 광범위한 언어/시각 표현을 습득했기 때문에, 특정 다운스트림 과제를 학습할 때 필요한 가중치 변화량 $\Delta W$는 극히 저차원 부분 공간(Subspace)에 위치함. 
-- 이 때문에 랭크 $r=4$나 $r=8$ 정도의 극소 파라미터만으로도 Full Fine-Tuning과 유사한 성능을 달성함.
+- 대형 모델은 이미 광범위한 언어/시각 표현을 습득했기 때문에, 특정 다운스트림 과제를 학습할 때 필요한 가중치 변화량 $\Delta W$는 극히 저차원 부분 공간(Subspace)에 위치함 
+- 이 때문에 랭크 $r=4$나 $r=8$ 정도의 극소 파라미터만으로도 Full Fine-Tuning과 유사한 성능을 달성함
 
 ### 2) QLoRA (Quantized LoRA)
-- 사전 학습 가중치 $W_0$를 4-bit NormalFloat(NF4) 형식으로 양자화하여 메모리를 극도로 압축하고, LoRA 어댑터 행렬 $A, B$만 16-bit 부동소수점으로 학습하는 기술임. 단일 RTX 3090/4090 GPU에서 65B 파라미터 LLM을 파인튜닝할 수 있게 되었습니다.
+- 사전 학습 가중치 $W_0$를 4-bit NormalFloat(NF4) 형식으로 양자화하여 메모리를 극도로 압축하고, LoRA 어댑터 행렬 $A, B$만 16-bit 부동소수점으로 학습하는 기술함 단일 RTX 3090/4090 GPU에서 65B 파라미터 LLM을 파인튜닝할 수 있게 되었습니다.
 
 ---
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 PyTorch를 활용하여 선형 레이어(Linear Layer)에 LoRA 메커니즘을 결합한 커스텀 `LoRALinear` 모듈 구현 예시임.
+다음은 PyTorch를 활용하여 선형 레이어(Linear Layer)에 LoRA 메커니즘을 결합한 커스텀 `LoRALinear` 모듈 구현 예시함
 
 ```python
 import math
@@ -113,8 +113,8 @@ class LoRALinear(nn.Module):
             self.reset_parameters()
 
     def reset_parameters(self) -> None:
-        """LoRA 행렬 A와 B의 파라미터를 초기화함.
-        A는 Gaussian 분포로, B는 0으로 초기화하여 초기에 ΔW = 0이 되도록 설정함.
+        """LoRA 행렬 A와 B의 파라미터를 초기화함
+        A는 Gaussian 분포로, B는 0으로 초기화하여 초기에 ΔW = 0이 되도록 설정함
         """
         if self.r > 0:
             nn.init.kaiming_uniform_(self.lora_A, a=math.sqrt(5))
@@ -186,7 +186,7 @@ if __name__ == "__main__":
 - **추론 속도 저하 0**: 배포 시 가중치 병합으로 원본 모델과 동일한 연산 속도 보장.
 
 ### 한계점
-- 랭크 $r$ 및 $\alpha$ 스케일링 인자 하이퍼파라미터 튜닝이 추가로 필요함.
+- 랭크 $r$ 및 $\alpha$ 스케일링 인자 하이퍼파라미터 튜닝이 추가로 필요함
 
 ---
 

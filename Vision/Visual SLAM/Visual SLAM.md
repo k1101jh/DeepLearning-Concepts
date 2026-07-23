@@ -11,19 +11,19 @@ Reference:
 ## 1. 개념 정보 및 한 줄 요약
 - **개념명**: Visual SLAM (vSLAM, 비주얼 동시적 위치추정 및 지도작성)
 - **관련 분야/카테고리**: Vision / Robotics / Spatial Computing / Pose Estimation
-- **한 줄 요약**: 미지의 환경을 이동하는 에이전트(로봇, 드론, AR 글래스)가 온보드 카메라 영상 스트림만을 이용하여 자신의 실시간 6차원 이동 포즈(Position & Orientation)를 추적함과 동시에 3D 맵(Map)을 구축하는 정밀 공간 지능 기술이다.
+- **한 줄 요약**: 미지의 환경을 이동하는 에이전트(로봇, 드론, AR 글래스)가 온보드 카메라 영상 스트림만을 이용하여 자신의 실시간 6차원 이동 포즈(Position & Orientation)를 추적함과 동시에 3D 맵(Map)을 구축하는 정밀 공간 지능 기술
 
 ---
 
 ## 2. 등장 배경 및 해결하려는 문제 (Why?)
 
 ### GPS 및 LiDAR 기반 기존 항법의 한계점
-- **실내 및 음영 지역 GPS 불능**: 음영 건물 내부, 지하, 우주 공간 등에서는 GPS 신호가 도달하지 않거나 신호 오차가 커서 위치를 추적할 수 없음.
+- **실내 및 음영 지역 GPS 불능**: 음영 건물 내부, 지하, 우주 공간 등에서는 GPS 신호가 도달하지 않거나 신호 오차가 커서 위치를 추적할 수 없음
 - **LiDAR의 높은 비용과 중량**: 3D 라이다 장비는 매우 비싸고 무게와 전력 소모가 커서 소형 드론, 스마트폰, AR 글래스에 탑재하기 어렵습니다.
 
 ### Visual SLAM 도입을 통한 핵심 해결 목표
-- **저비용·고효율 센서(카메라) 활용**: 어디서나 쉽게 구할 수 있는 모노큘러(Monocular), 스테레오(Stereo), RGB-D 카메라만으로 정밀 센서 융합 위치 추적을 실현함.
-- **풍부한 시각적 텍스처 정보 활용**: 3D 포인트 구름뿐만 아니라 시각적 마커, 루프 클로저(Loop Closure)를 이용해 누적 오차(Drift Error)를 보정하고 무결점 3D 맵을 구축함.
+- **저비용·고효율 센서(카메라) 활용**: 어디서나 쉽게 구할 수 있는 모노큘러(Monocular), 스테레오(Stereo), RGB-D 카메라만으로 정밀 센서 융합 위치 추적을 실현함
+- **풍부한 시각적 텍스처 정보 활용**: 3D 포인트 구름뿐만 아니라 시각적 마커, 루프 클로저(Loop Closure)를 이용해 누적 오차(Drift Error)를 보정하고 무결점 3D 맵을 구축함
 
 ---
 
@@ -44,11 +44,11 @@ Reference:
 ```
 
 1. **프론트엔드 (Front-End - Tracking)**:
-   - 연속된 프레임 간 특징점(ORB, SuperPoint) 추출 및 매칭 또는 딥러닝 기반 아티팩트 광학 흐름(Optical Flow) 추적으로 카메라의 1차 프레임간 이동 변화량($T_{t, t-1} \in SE(3)$)을 추정함.
+   - 연속된 프레임 간 특징점(ORB, SuperPoint) 추출 및 매칭 또는 딥러닝 기반 아티팩트 광학 흐름(Optical Flow) 추적으로 카메라의 1차 프레임간 이동 변화량($T_{t, t-1} \in SE(3)$)을 추정함
 2. **백엔드 (Back-End - Optimization)**:
-   - **번들 조정 (Bundle Adjustment, BA)**: 수집된 카메라 포즈와 3D 포인트 위치 간의 재투영 오차(Reprojection Error)를 최소화하도록 비선형 최적화(Levenberg-Marquardt)를 수행함.
+   - **번들 조정 (Bundle Adjustment, BA)**: 수집된 카메라 포즈와 3D 포인트 위치 간의 재투영 오차(Reprojection Error)를 최소화하도록 비선형 최적화(Levenberg-Marquardt)를 수행함
 3. **루프 클로저 (Loop Closure Detection)**:
-   - 로봇이 이전에 방문했던 장소로 다시 돌아왔음을 재인식(Place Recognition)하여, 그동안 누적된 전역 드리프트 오차(Accumulated Drift)를 한 번에 교정함.
+   - 로봇이 이전에 방문했던 장소로 다시 돌아왔음을 재인식(Place Recognition)하여, 그동안 누적된 전역 드리프트 오차(Accumulated Drift)를 한 번에 교정함
 
 ### 2) 재투영 오차 (Reprojection Error) 수식
 
@@ -63,14 +63,14 @@ $$\min_{T_j, P_i} \sum_{i, j} \rho \left( \| u_{ij} - \pi(K T_j P_i) \|^2 \right
 ## 4. 핵심 세부 개념 및 부가 설명
 
 ### 1) Traditional (ORB-SLAM) vs Deep Learning (DROID-SLAM)
-- **전통적 기법 (ORB-SLAM3)**: 수식 기반 기하학(Epipolar Geometry)과 핸드크래프티드 특징점(ORB Feature)을 사용하여 CPU 상에서 극도로 빠른 초고속 처리가 가능함.
-- **딥러닝 기반 (DROID-SLAM)**: 딥러닝 광학 흐름(Optical Flow)과 미분 가능한 번들 조정(Differentiable BA)을 결합하여, 텍스처가 부족한 벽면이나 빛 변동이 심한 극한 환경에서도 튕기지 않고 극도로 안정적으로 추적함.
+- **전통적 기법 (ORB-SLAM3)**: 수식 기반 기하학(Epipolar Geometry)과 핸드크래프티드 특징점(ORB Feature)을 사용하여 CPU 상에서 극도로 빠른 초고속 처리가 가능함
+- **딥러닝 기반 (DROID-SLAM)**: 딥러닝 광학 흐름(Optical Flow)과 미분 가능한 번들 조정(Differentiable BA)을 결합하여, 텍스처가 부족한 벽면이나 빛 변동이 심한 극한 환경에서도 튕기지 않고 극도로 안정적으로 추적함
 
 ---
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 PyTorch를 이용하여 3D 공간상의 포인트 집합 $P$가 6자유도 카메라 포즈 $T = [R | t]$와 내적 카메라 행렬 $K$를 통과해 2D 픽셀 좌표로 투영되는 핀홀 카메라 핀홀 재투영 연산 모듈 예시 코드임.
+다음은 PyTorch를 이용하여 3D 공간상의 포인트 집합 $P$가 6자유도 카메라 포즈 $T = [R | t]$와 내적 카메라 행렬 $K$를 통과해 2D 픽셀 좌표로 투영되는 핀홀 카메라 핀홀 재투영 연산 모듈 예시 코드함
 
 ```python
 from typing import Tuple
@@ -99,7 +99,7 @@ class PinholeProjection(nn.Module):
         R: torch.Tensor,
         t: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor]:
-        """3D 포인트를 2D 픽셀 평면으로 투영하고 깊이(Depth) 및 픽셀 좌표를 반환함.
+        """3D 포인트를 2D 픽셀 평면으로 투영하고 깊이(Depth) 및 픽셀 좌표를 반환함
 
         Args:
             points_3d (torch.Tensor): 3D 공간 포인트 좌표. 크기: (batch_size, N, 3)
@@ -170,7 +170,7 @@ if __name__ == "__main__":
 - **Visual-Semantic 확장성**: Object Detection 및 3D Gaussian Splatting과 결합하여 의미론적 공간 지도 구축 가능.
 
 ### 한계점
-- 완전한 어둠이나 텍스처가 전혀 없는 민무늬 흰 벽면에서는 특징점이 없어 트래킹이 일시적으로 꺼질(Tracking Lost) 수 있음.
+- 완전한 어둠이나 텍스처가 전혀 없는 민무늬 흰 벽면에서는 특징점이 없어 트래킹이 일시적으로 꺼질(Tracking Lost) 수 있음
 
 ---
 

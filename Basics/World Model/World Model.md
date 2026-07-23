@@ -11,7 +11,7 @@ Reference:
 ## 1. 개념 정보 및 한 줄 요약
 - **개념명**: World Model (세계 모델 / 공간 및 비디오 내재 시뮬레이터)
 - **관련 분야/카테고리**: Basics / Reinforcement Learning / Video Generation / Spatial AI
-- **한 줄 요약**: 관찰된 과거 이미지/비디오 시퀀스와 자신의 행동(Action)을 바탕으로, 환경의 미래 상태(Future Latent State) 및 변화 결과를 내부 잠재 공간(Latent Space)에서 시뮬레이션하여 계획 및 의사결정을 수행하는 AI 모델이다.
+- **한 줄 요약**: 관찰된 과거 이미지/비디오 시퀀스와 자신의 행동(Action)을 바탕으로, 환경의 미래 상태(Future Latent State) 및 변화 결과를 내부 잠재 공간(Latent Space)에서 시뮬레이션하여 계획 및 의사결정을 수행하는 AI 모델
 
 ---
 
@@ -23,7 +23,7 @@ Reference:
 
 ### World Model 도입을 통한 핵심 해결 목표
 - **머릿속 상상 학습 (Dreaming / Imagination Training)**: 실제 환경에 부딪히지 않고, 월드 모델이 생성해내는 내부 잠재 공간 시뮬레이션(Imaginated Trajectory) 안에서 거대한 정책(Policy)을 초고속으로 스스로 훈련시킵니다.
-- **물리적 물리 규칙 자율 습득**: 비디오의 다음 프레임 피처를 예측(Self-Supervised Learning)하면서 물리적 입체 구조, 연속성, 물체의 영속성(Object Permanence)을 자연스럽게 습득함.
+- **물리적 물리 규칙 자율 습득**: 비디오의 다음 프레임 피처를 예측(Self-Supervised Learning)하면서 물리적 입체 구조, 연속성, 물체의 영속성(Object Permanence)을 자연스럽게 습득함
 
 ---
 
@@ -63,7 +63,7 @@ $$\mathcal{L}_{\text{JEPA}} = \| s_y - s_{\hat{y}} \|^2 \quad (\text{잠재 표�
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 현재 잠재 상태 $z_t$와 로봇 행동 $a_t$가 주어졌을 때, 미래의 잠재 상태 $z_{t+1}$을 예측하는 간단한 Recurrent World Model (M Model)의 PyTorch 연산 예시 코드임.
+다음은 현재 잠재 상태 $z_t$와 로봇 행동 $a_t$가 주어졌을 때, 미래의 잠재 상태 $z_{t+1}$을 예측하는 간단한 Recurrent World Model (M Model)의 PyTorch 연산 예시 코드함
 
 ```python
 from typing import Tuple
@@ -113,7 +113,7 @@ class RecurrentWorldModel(nn.Module):
         a_t: torch.Tensor,
         h_prev: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """미래 1스텝 상태를 상상(Imagine)하여 예측함.
+        """미래 1스텝 상태를 상상(Imagine)하여 예측함
 
         Args:
             z_t (torch.Tensor): 현재 시점 관찰 잠재 벡터. (batch_size, latent_dim)
@@ -173,7 +173,7 @@ if __name__ == "__main__":
 - **자율주행 및 파운데이션 에이전트의 기반**: 물리학적 타당성을 스스로 습득하여 미래 예측 수행.
 
 ### 한계점
-- 월드 모델의 미래 예측이 부정확할 경우(Compounding Error), 상상 속 정책 학습이 잘못된 방향으로 편향될 위험이 있음.
+- 월드 모델의 미래 예측이 부정확할 경우(Compounding Error), 상상 속 정책 학습이 잘못된 방향으로 편향될 위험이 있음
 
 ---
 
