@@ -31,12 +31,14 @@
 - [Attention Mechanism](./Attention/Attention.md)
 - [Transformer (트랜스포머 아키텍처)](./Transformer/Transformer/Transformer.md)
 
-### 🎨 Generative Models (생성 모델)
+### 🎨 Generative Models & 3D (생성 모델 및 3D 비전)
 - [Diffusion Model (확산 모델)](./Diffusion%20Model/Diffusion%20Model/Diffusion%20Model.md)
+- [3D Gaussian Splatting (3DGS)](./Vision/3D%20Gaussian%20Splatting/3D%20Gaussian%20Splatting.md)
 - [GAN (Generative Adversarial Network)](./GAN/GAN/GAN.md)
 - [VAE (Variational Autoencoder)](./VAE/VAE/VAE.md)
 
-### 💬 LLM & NLP (대형 언어 모델)
+### 💬 LLM & Multi-Modal (대형 언어 모델 및 다중모달)
+- [VLM (Vision-Language Model - 시각-언어 모델)](./LLM/VLM/VLM.md)
 - [InstructGPT](./LLM/InstructGPT/InstructGPT.md)
 - [LLM 파라미터 및 경량화 설정](./LLM/LLM%20파라미터/LLM%20파라미터.md)
 - [Semantic Router](./LLM/Semantic%20Router/Semantic%20Router.md)
