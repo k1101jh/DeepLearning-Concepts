@@ -23,7 +23,7 @@ Reference:
 
 ### World Model 도입을 통한 핵심 해결 목표
 - **머릿속 상상 학습 (Dreaming / Imagination Training)**: 실제 환경에 부딪히지 않고, 월드 모델이 생성해내는 내부 잠재 공간 시뮬레이션(Imaginated Trajectory) 안에서 거대한 정책(Policy)을 초고속으로 스스로 훈련시킵니다.
-- **물리적 물리 규칙 자율 습득**: 비디오의 다음 프레임 피처를 예측(Self-Supervised Learning)하면서 물리적 입체 구조, 연속성, 물체의 영속성(Object Permanence)을 자연스럽게 습득합니다.
+- **물리적 물리 규칙 자율 습득**: 비디오의 다음 프레임 피처를 예측(Self-Supervised Learning)하면서 물리적 입체 구조, 연속성, 물체의 영속성(Object Permanence)을 자연스럽게 습득함.
 
 ---
 
@@ -63,7 +63,7 @@ $$\mathcal{L}_{\text{JEPA}} = \| s_y - s_{\hat{y}} \|^2 \quad (\text{잠재 표�
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 현재 잠재 상태 $z_t$와 로봇 행동 $a_t$가 주어졌을 때, 미래의 잠재 상태 $z_{t+1}$을 예측하는 간단한 Recurrent World Model (M Model)의 PyTorch 연산 예시 코드입니다.
+다음은 현재 잠재 상태 $z_t$와 로봇 행동 $a_t$가 주어졌을 때, 미래의 잠재 상태 $z_{t+1}$을 예측하는 간단한 Recurrent World Model (M Model)의 PyTorch 연산 예시 코드임.
 
 ```python
 from typing import Tuple
@@ -113,7 +113,7 @@ class RecurrentWorldModel(nn.Module):
         a_t: torch.Tensor,
         h_prev: torch.Tensor
     ) -> Tuple[torch.Tensor, torch.Tensor, torch.Tensor]:
-        """미래 1스텝 상태를 상상(Imagine)하여 예측합니다.
+        """미래 1스텝 상태를 상상(Imagine)하여 예측함.
 
         Args:
             z_t (torch.Tensor): 현재 시점 관찰 잠재 벡터. (batch_size, latent_dim)

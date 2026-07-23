@@ -17,13 +17,13 @@ Reference:
 ## 2. 등장 배경 및 해결하려는 문제 (Why?)
 
 ### 기존 NeRF (Neural Radiance Fields) 및 Mesh 기반 기술의 한계점
-- **NeRF의 극심한 추론 지연 (Low FPS)**: NeRF는 픽셀 하나를 렌더링할 때마다 볼륨 레이 마칭(Volume Ray Marching)을 수행하며 거대한 MLP를 수십~수백 번 평가해야 합니다. 이에 따라 렌더링 속도가 1 FPS 미만으로 낮아 실시간 응용이 불가능했습니다.
-- **학습 시간 폭증**: NeRF는 복잡한 신경망을 수 시간~수 일 동안 학습시켜야 3D 공간 복원이 완료됩니다.
-- **명시적 Mesh 표현의 제약**: 폴리곤 메쉬(Polygon Mesh) 기반 방식은 유리를 통과하는 빛이나 연기, 반사, 복잡한 세부 텍스처 등 얇고 투명한 광선 효과를 표현하는 데 한계가 있습니다.
+- **NeRF의 극심한 추론 지연 (Low FPS)**: NeRF는 픽셀 하나를 렌더링할 때마다 볼륨 레이 마칭(Volume Ray Marching)을 수행하며 거대한 MLP를 수십~수백 번 평가해야 함. 이에 따라 렌더링 속도가 1 FPS 미만으로 낮아 실시간 응용이 불가능했습니다.
+- **학습 시간 폭증**: NeRF는 복잡한 신경망을 수 시간~수 일 동안 학습시켜야 3D 공간 복원이 완료됨.
+- **명시적 Mesh 표현의 제약**: 폴리곤 메쉬(Polygon Mesh) 기반 방식은 유리를 통과하는 빛이나 연기, 반사, 복잡한 세부 텍스처 등 얇고 투명한 광선 효과를 표현하는 데 한계가 있음.
 
 ### 3DGS 도입을 통한 핵심 해결 목표
 - **실시간 초고속 렌더링 (Real-Time 100+ FPS)**: 신경망(MLP) 평가를 완전히 없애고, 그래픽스 파이프라인과 결합된 타일드 라스터라이제이션(Tiled Rasterization)을 도입해 1080p 해상도에서 100 FPS 이상의 즉각적인 렌더링을 실현했습니다.
-- **초고속 학습 속도**: 최적화 알고리즘이 30분 이내에 완료되어 고화질 3D 공간을 복원합니다.
+- **초고속 학습 속도**: 최적화 알고리즘이 30분 이내에 완료되어 고화질 3D 공간을 복원함.
 
 ---
 
@@ -52,23 +52,23 @@ $$\Sigma' = J W \Sigma W^T J^T$$
 
 $$C(x) = \sum_{i=1}^N c_i \alpha_i' \prod_{j=1}^{i-1} (1 - \alpha_j')$$
 
-여기서 $\alpha_i' = \alpha_i \cdot G_{2D}(x)$입니다.
+여기서 $\alpha_i' = \alpha_i \cdot G_{2D}(x)$임.
 
 ---
 
 ## 4. 핵심 세부 개념 및 부가 설명
 
 ### 1) 밀도 조절 및 어댑티브 적응 (Adaptive Density Control)
-- 학습 과정에서 가우시안의 밀도를 동적으로 제어합니다.
-- **적응적 분할 (Split)**: 너무 큰 영역을 지닌 가우시안은 2개의 작은 가우시안으로 분할합니다.
-- **적응적 복제 (Clone)**: 렌더링 오차(Gradient)가 크지만 가우시안 크기가 작은 영역은 가우시안을 복제하여 정밀도를 높입니다.
-- **제거 (Prune)**: 불투명도 $\alpha$가 너무 낮은 투명 가우시안은 메모리 절약을 위해 삭제합니다.
+- 학습 과정에서 가우시안의 밀도를 동적으로 제어함.
+- **적응적 분할 (Split)**: 너무 큰 영역을 지닌 가우시안은 2개의 작은 가우시안으로 분할함.
+- **적응적 복제 (Clone)**: 렌더링 오차(Gradient)가 크지만 가우시안 크기가 작은 영역은 가우시안을 복제하여 정밀도를 높임.
+- **제거 (Prune)**: 불투명도 $\alpha$가 너무 낮은 투명 가우시안은 메모리 절약을 위해 삭제함.
 
 ---
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 PyTorch를 사용하여 3D 가우시안의 중심 좌표, 스케일, 회전 쿼터니언으로부터 3D 공분산 행렬 $\Sigma$를 구성하는 계산 모듈 예시 코드입니다.
+다음은 PyTorch를 사용하여 3D 가우시안의 중심 좌표, 스케일, 회전 쿼터니언으로부터 3D 공분산 행렬 $\Sigma$를 구성하는 계산 모듈 예시 코드임.
 
 ```python
 from typing import Tuple
@@ -86,7 +86,7 @@ class Gaussian3DCovariance(nn.Module):
 
     @staticmethod
     def quaternion_to_rotation_matrix(q: torch.Tensor) -> torch.Tensor:
-        """쿼터니언 (w, x, y, z) 텐서를 3x3 회전 행렬 R로 변환합니다.
+        """쿼터니언 (w, x, y, z) 텐서를 3x3 회전 행렬 R로 변환함.
 
         Args:
             q (torch.Tensor): 정규화된 쿼터니언 텐서. 크기: (N, 4)
@@ -108,7 +108,7 @@ class Gaussian3DCovariance(nn.Module):
         return R
 
     def forward(self, scale: torch.Tensor, rotation_quaternion: torch.Tensor) -> torch.Tensor:
-        """스케일과 회전 쿼터니언으로 3D 공분산 행렬 Σ를 계산합니다.
+        """스케일과 회전 쿼터니언으로 3D 공분산 행렬 Σ를 계산함.
 
         Args:
             scale (torch.Tensor): 각 축별 양수 스케일 벡터. 크기: (N, 3)

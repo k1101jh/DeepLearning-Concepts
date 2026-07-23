@@ -22,8 +22,8 @@ Reference:
 - **언어 모델 (Language Only)**: LLM(GPT-3, LLaMA)은 인간 언어 추론 능력이 뛰어나지만 시각적 세상을 볼 수 없어 텍스트 외부의 물리적 이미지 정보에 접근하지 못했습니다.
 
 ### VLM 도입을 통한 핵심 해결 목표
-- **열린 세계(Open-world) 시각 인식**: 대규모 웹 이미지-텍스트 쌍(Image-Text Pairs)으로 학습하여 사전 정의되지 않은 클래스도 Zero-shot으로 즉시 인식합니다.
-- **이미지 기반 고차원 자연어 추론 (Visual Reasoning)**: 이미지 패치 토큰을 LLM의 토큰 시퀀스로 이식하여, 이미지 속 복잡한 차트 분석, 시각적 질의응답(VQA), 추론을 가능하게 합니다.
+- **열린 세계(Open-world) 시각 인식**: 대규모 웹 이미지-텍스트 쌍(Image-Text Pairs)으로 학습하여 사전 정의되지 않은 클래스도 Zero-shot으로 즉시 인식함.
+- **이미지 기반 고차원 자연어 추론 (Visual Reasoning)**: 이미지 패치 토큰을 LLM의 토큰 시퀀스로 이식하여, 이미지 속 복잡한 차트 분석, 시각적 질의응답(VQA), 추론을 가능하게 함.
 
 ---
 
@@ -34,7 +34,7 @@ Reference:
 ![CLIP Architecture](https://raw.githubusercontent.com/openai/CLIP/main/CLIP.png)
 > **Figure 1. CLIP 대조 학습 및 Zero-shot 분류 메커니즘 (출처: [OpenAI CLIP](https://github.com/openai/CLIP))**
 
-- 이미지 인코더 $f_I(x)$와 텍스트 인코더 $f_T(y)$를 준비합니다.
+- 이미지 인코더 $f_I(x)$와 텍스트 인코더 $f_T(y)$를 준비함.
 - Batch Size $N$개의 (이미지, 텍스트) 대각선 쌍의 코사인 유사도는 극대화(Maximize)하고, 대각선이 아닌 이종 쌍의 유사도는 극소화(Minimize)하는 InfoNCE Loss로 두 모달리티 임베딩 공간을 유기적으로 정렬합니다:
 
 $$\mathcal{L}_{\text{CLIP}} = -\frac{1}{N} \sum_{i=1}^N \log \frac{\exp(\text{sim}(I_i, T_i)/\tau)}{\sum_{j=1}^N \exp(\text{sim}(I_i, T_j)/\tau)}$$
@@ -60,13 +60,13 @@ $$\mathcal{L}_{\text{CLIP}} = -\frac{1}{N} \sum_{i=1}^N \log \frac{\exp(\text{si
 
 ### 2) Perceiver Resampler & Q-Former
 - 이미지 해상도가 높아지면 비전 토큰 수가 수천 개로 폭증하여 LLM 연산에 과부하가 걸립니다.
-- Flamingo의 Perceiver Resampler나 BLIP-2의 Q-Former는 학습 가능한 쿼리 토큰을 사용하여 고정된 $K$개(예: 32개, 64개)의 고축적 비전 토큰으로 압축(Resampling)하는 훌륭한 해결책을 제시합니다.
+- Flamingo의 Perceiver Resampler나 BLIP-2의 Q-Former는 학습 가능한 쿼리 토큰을 사용하여 고정된 $K$개(예: 32개, 64개)의 고축적 비전 토큰으로 압축(Resampling)하는 훌륭한 해결책을 제시함.
 
 ---
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 PyTorch를 활용하여 Vision Encoder(ViT)의 출력을 선형 프로젝션(Linear Projection) 레이어로 사영하여 LLM 임베딩 입력에 결합하는 LLaVA 스타일의 간단한 VLM 패스웨이 모듈 예시입니다.
+다음은 PyTorch를 활용하여 Vision Encoder(ViT)의 출력을 선형 프로젝션(Linear Projection) 레이어로 사영하여 LLM 임베딩 입력에 결합하는 LLaVA 스타일의 간단한 VLM 패스웨이 모듈 예시임.
 
 ```python
 from typing import Tuple, Optional
@@ -96,7 +96,7 @@ class SimpleVLMConnector(nn.Module):
         image_features: torch.Tensor,
         text_embeds: torch.Tensor
     ) -> torch.Tensor:
-        """비주얼 토큰과 텍스트 토큰 시퀀스를 하나로 결합합니다.
+        """비주얼 토큰과 텍스트 토큰 시퀀스를 하나로 결합함.
 
         Args:
             image_features (torch.Tensor): ViT로부터 추출된 비전 피처 텐서. (batch_size, num_patches, vision_dim)

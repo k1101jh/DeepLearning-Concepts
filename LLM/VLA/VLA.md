@@ -23,19 +23,19 @@ Reference:
 
 ### VLA 도입을 통한 핵심 해결 목표
 - **웹 규모 대용량 지식의 이식**: 텍스트와 이미지를 대규모로 학습한 VLM(예: PaLM-E, Prismatic VLM)의 가중치를 기반으로 로봇 동작(Action) 데이터를 미세조정하여 일반화 능력을 획득했습니다.
-- **자연어 지시문 직관적 제어**: 인간의 모호한 복합 자연어 지시문을 곧바로 6자유도 말단 장치(End-effector) 조작 명령으로 번역합니다.
+- **자연어 지시문 직관적 제어**: 인간의 모호한 복합 자연어 지시문을 곧바로 6자유도 말단 장치(End-effector) 조작 명령으로 번역함.
 
 ---
 
 ## 3. 핵심 원리 및 메커니즘 (How?)
 
 ### 1) 액션의 토큰화 (Action Discretization & Tokenization)
-VLA의 핵심 아이디어는 연속적인 로봇 제어 신호를 언어 모델의 텍스트 토큰 어휘(Vocabulary)처럼 이산화(Discretization)하는 것입니다.
+VLA의 핵심 아이디어는 연속적인 로봇 제어 신호를 언어 모델의 텍스트 토큰 어휘(Vocabulary)처럼 이산화(Discretization)하는 것임.
 
 로봇의 7차원 동작 상태 벡터 $a_t$:
 $$a_t = [\Delta x, \Delta y, \Delta z, \Delta \text{roll}, \Delta \text{pitch}, \Delta \text{yaw}, \text{gripper\_state}]$$
 
-- 각 위치/회전 변화량을 256개의 이산 구간(Bin)으로 양자화하여, 텍스트 Vocabulary 상의 특정 토큰 ID(예: 토큰 ID 32000 ~ 32256)에 1:1 매핑합니다.
+- 각 위치/회전 변화량을 256개의 이산 구간(Bin)으로 양자화하여, 텍스트 Vocabulary 상의 특정 토큰 ID(예: 토큰 ID 32000 ~ 32256)에 1:1 매핑함.
 
 ### 2) VLA 아키텍처 연산 파이프라인
 
@@ -46,26 +46,26 @@ $$a_t = [\Delta x, \Delta y, \Delta z, \Delta \text{roll}, \Delta \text{pitch}, 
 ```
 
 - **입력 시퀀스**: $\text{Tokens} = [\text{Visual Tokens}, \text{Instruction Text Tokens}]$
-- **출력 토큰**: 모델은 자동거듭(Autoregressive) 방식으로 다음 7개 토큰(Action Bins)을 순차적으로 생성합니다.
-- **데코딩**: 출력된 토큰 ID를 다시 연속적인 실수값 $[\Delta x, \Delta y, \Delta z, \dots]$로 역양자화하여 로봇 모터로 전송합니다.
+- **출력 토큰**: 모델은 자동거듭(Autoregressive) 방식으로 다음 7개 토큰(Action Bins)을 순차적으로 생성함.
+- **데코딩**: 출력된 토큰 ID를 다시 연속적인 실수값 $[\Delta x, \Delta y, \Delta z, \dots]$로 역양자화하여 로봇 모터로 전송함.
 
 ---
 
 ## 4. 핵심 세부 개념 및 부가 설명
 
 ### 1) Action Bins (액션 빈 양자화)
-- 연속적인 변위 $[-0.1, 0.1] \text{ meters}$ 범위를 256개의 동일한 간격의 Bin으로 균등 분할합니다.
+- 연속적인 변위 $[-0.1, 0.1] \text{ meters}$ 범위를 256개의 동일한 간격의 Bin으로 균등 분할함.
 - 예: Bin 0 = $-0.1\text{m}$, Bin 128 = $0.0\text{m}$, Bin 255 = $+0.1\text{m}$
-- 이를 통해 교사 강요(Teacher-forcing) 교차 엔트로피 손실(Cross-Entropy Loss)을 그대로 사용하여 로봇 정책을 손쉽게 학습시킬 수 있습니다.
+- 이를 통해 교사 강요(Teacher-forcing) 교차 엔트로피 손실(Cross-Entropy Loss)을 그대로 사용하여 로봇 정책을 손쉽게 학습시킬 수 있음.
 
 ### 2) Embodied Instruction Following (구체화된 지시 이행)
-- 단순히 "컵을 집어라"뿐만 아니라 "테이블 위에 떨어진 쓰레기를 쓰레기통에 버려라"와 같이 논리적 단계가 필요한 태스크를 시각 정보를 관찰하며 단계적으로 이행합니다.
+- 단순히 "컵을 집어라"뿐만 아니라 "테이블 위에 떨어진 쓰레기를 쓰레기통에 버려라"와 같이 논리적 단계가 필요한 태스크를 시각 정보를 관찰하며 단계적으로 이행함.
 
 ---
 
 ## 5. 코드 구현 예시 (PyTorch / Python)
 
-다음은 연속적인 7-DoF 로봇 제어 신호를 256개의 이산 액션 토큰 ID로 양자화(Quantize) 및 역양자화(Dequantize)하는 VLA Action Tokenizer의 핵심 PyTorch 구현 코드입니다.
+다음은 연속적인 7-DoF 로봇 제어 신호를 256개의 이산 액션 토큰 ID로 양자화(Quantize) 및 역양자화(Dequantize)하는 VLA Action Tokenizer의 핵심 PyTorch 구현 코드임.
 
 ```python
 from typing import Tuple
@@ -102,7 +102,7 @@ class VLAActionTokenizer(nn.Module):
         )
 
     def action_to_tokens(self, continuous_action: torch.Tensor) -> torch.Tensor:
-        """연속적인 실수 로봇 액션 벡터를 LLM 토큰 ID 텐서로 변환합니다.
+        """연속적인 실수 로봇 액션 벡터를 LLM 토큰 ID 텐서로 변환함.
 
         Args:
             continuous_action (torch.Tensor): 7-DoF 연속 액션 텐서. 크기: (batch_size, 7)
@@ -122,7 +122,7 @@ class VLAActionTokenizer(nn.Module):
         return action_token_ids
 
     def tokens_to_action(self, action_token_ids: torch.Tensor) -> torch.Tensor:
-        """LLM이 생성한 액션 토큰 ID 텐서를 로봇이 실행 가능한 연속 실수 액션으로 역양자화합니다.
+        """LLM이 생성한 액션 토큰 ID 텐서를 로봇이 실행 가능한 연속 실수 액션으로 역양자화함.
 
         Args:
             action_token_ids (torch.Tensor): 생성된 액션 토큰 ID. 크기: (batch_size, 7)
